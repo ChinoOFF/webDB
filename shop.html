@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DGHolding | CyberStore & DB Console</title>
+    <!-- CryptoJS para Encriptación y Desencriptación Real AES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        /* --- VARIABLES ESTILO APPLE / MODALIDAD OSCURA AZUL NOCHE --- */
+        :root {
+            --bg-dark: #05070A;
+            --bg-card: rgba(13, 20, 35, 0.65);
+            --primary-gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --cyber-blue: #0071e3;
+            --cyber-green: #00ff66;
+            --text-main: #F5F5F7;
+            --text-secondary: #86868B;
+            --glass-border: rgba(212, 175, 55, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- LOGO / HEADER SIMPLE --- */
+        header {
+            background: rgba(5, 7, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0;
+            margin-bottom: 40px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .logo-coin {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #FFE066, #996515);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- SECCIÓN TIENDA DE SERVICIOS --- */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+        }
+
+        .product-card:hover {
+            border-color: var(--cyber-blue);
+            box-shadow: 0 10px 25px rgba(0, 113, 227, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .product-img-wrapper {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(5, 7, 10, 0.85);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 4px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 20px;
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-gold);
+        }
+
+        .btn-order {
+            background: var(--text-main);
+            color: #000;
+            border: none;
+            padding: 10px 22px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-order:hover {
+            background: var(--primary-gold);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* --- CONSOLA DE BASE DE DATOS CRIPTO --- */
+        .terminal-container {
+            background: #020305;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ff5f56; }
+        .dot.y { background: #ffbd2e; }
+        .dot.g { background: #27c93f; }
+
+        .terminal-token {
+            font-size: 12px;
+            color: var(--primary-gold);
+        }
+
+        .db-table-wrapper {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .db-table th {
+            color: var(--primary-gold);
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .db-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: #A0A0A5;
+        }
+
+        .cipher-text {
+            color: var(--cyber-green) !important;
+            font-weight: bold;
+            word-break: break-all;
+            max-width: 320px;
+        }
+
+        /* --- BOTONES DE DESENCRIPCION --- */
+        .btn-decrypt-panel {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-action {
+            background: transparent;
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            background: var(--primary-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .btn-action.danger {
+            color: #ff5f56;
+            border-color: #ff5f56;
+        }
+
+        .btn-action.danger:hover {
+            background: #ff5f56;
+            color: #000;
+            box-shadow: none;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            right: 30px;
+            background: #000;
+            border: 1px solid var(--primary-gold);
+            color: var(--text-main);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 2000;
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show { bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <div id="toastNotification" class="toast">🔒 Operación Registrada Correctamente.</div>
+
+    <header>
+        <div class="navbar container">
+            <div class="logo">
+                <div class="logo-coin">$</div>
+                <span>DGHolding Operations</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary);" id="timerDisplay">Expira en: 12:00:00</div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- SECCIÓN 1: TIENDA BLACK MARKET -->
+        <div class="section-header">
+            <h2>Módulos Operativos Disponibles</h2>
+            <p style="color: var(--text-secondary); margin-top: 5px; font-size: 14px;">Elige una categoría de servicio para inyectarla relacionalmente a la Base de Datos</p>
+        </div>
+
+        <div class="store-grid">
+            <!-- OSINT -->
+            <div class="product-card">
+                <div class="product-img-wrapper">
+                    <span class="product-badge">CAT-101</span>
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600" alt="OSINT">
+                </div>
+                <div class="product-info">
+                    <h3>Sistemas de Inteligencia OSINT</h3>
+                    <p>Rastreo profundo de fuentes abiertas, indexación de huella digital y mapeo automatizado.</p>
+                    <div class="product-meta">
+                        <span class="product-price">$3,500 MXN</span>
+                        <button class="btn-order" onclick="processOrder('CAT-101', 'Plataforma OSINT Hunter v2')">Adquirir Módulo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HACKING -->
+            <div class="product-card">
+                <div class="product-img-wrapper">
+                    <span class="product-badge">CAT-102</span>
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600" alt="Hacking">
+                </div>
+                <div class="product-info">
+                    <h3>Auditorías e Inyección Hacking</h3>
+                    <p>Análisis forense, explotación controlada de endpoints y revisión de código estricto.</p>
+                    <div class="product-meta">
+                        <span class="product-price">$7,800 MXN</span>
+                        <button class="btn-order" onclick="processOrder('CAT-102', 'Pentesting Avanzado Inyección')">Adquirir Módulo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NETWORKING -->
+            <div class="product-card">
+                <div class="product-img-wrapper">
+                    <span class="product-badge">CAT-103</span>
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=600" alt="Networking">
+                </div>
+                <div class="product-info">
+                    <h3>Arquitectura VLAN & Routing</h3>
+                    <p>Configuración de redes lógicas segmentadas, enrutamiento robusto y Firewalls físicos.</p>
+                    <div class="product-meta">
+                        <span class="product-price">$4,200 MXN</span>
+                        <button class="btn-order" onclick="processOrder('CAT-103', 'Segmentación VLAN Extrema')">Adquirir Módulo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: BASE DE DATOS COMPACTA CON DESENCRIPCION -->
+        <div class="section-header" style="margin-top: 20px;">
+            <h2>[Monitor Relacional de Base de Datos]</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">Muestra de almacenamiento encriptado y descifrado dinámico</p>
+        </div>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <div class="dot r"></div>
+                    <div class="dot y"></div>
+                    <div class="dot g"></div>
+                </div>
+                <div class="terminal-token" id="tokenDisplay">DG-TOKEN-VERIFYING...</div>
+            </div>
+
+            <h4 style="color: var(--primary-gold); font-size: 13px; margin-bottom: 5px;">TABLA 1: Categorías de Inteligencia (Esquema Primario Fijo)</h4>
+            <div class="db-table-wrapper" style="margin-bottom: 25px;">
+                <table class="db-table">
+                    <thead>
+                        <tr>
+                            <th>ID_CAT</th>
+                            <th>Nombre Categoría</th>
+                            <th>Acceso Requerido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>CAT-101</td><td>OSINT & Reconnaissance</td><td>Nivel 3</td></tr>
+                        <tr><td>CAT-102</td><td>Cyber Hacking & Exploitation</td><td>Nivel 5</td></tr>
+                        <tr><td>CAT-103</td><td>Network Routing & Infrastructure</td><td>Nivel 4</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="color: var(--primary-gold); font-size: 13px; margin-bottom: 5px;">TABLA 2: Registro Relacional de Pedidos (Almacenamiento Local)</h4>
+            <div class="db-table-wrapper">
+                <table class="db-table">
+                    <thead>
+                        <tr>
+                            <th>ID_PEDIDO</th>
+                            <th>ID_CAT</th>
+                            <th>Servicio Compra</th>
+                            <th>Datos Sensibles Guardados (AES Ciphertext)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Cargados dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- BOTONES DE CONTROL EXCLUSIVOS PARA MOSTRAR AL MAESTRO -->
+            <div class="btn-decrypt-panel">
+                <button class="btn-action danger" onclick="clearDatabase()">Limpiar Base de Datos</button>
+                <button class="btn-action" onclick="toggleDecrypt()">🔓 EJECUTAR DESENCRIPCIÓN AES</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- LLAVE SECRETA DE CIFRADO ---
+        const SECRET_KEY = "DG_HOLDING_SECRET_KEY_2026";
+        let decryptedState = false; // Estado para alternar el botón
+
+        // --- SISTEMA AUTOMÁTICO DE TOKEN Y PERSISTENCIA (12 HORAS) ---
+        function initializeSystem() {
+            let sessionToken = localStorage.getItem('dg_session_token');
+            let expirationTime = localStorage.getItem('dg_expiration_time');
+            
+            const now = new Date().getTime();
+            const twelveHours = 12 * 60 * 60 * 1000;
+
+            if (!sessionToken || !expirationTime || now > parseInt(expirationTime)) {
+                sessionToken = "DG-TOKEN-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+                expirationTime = now + twelveHours;
+                
+                localStorage.setItem('dg_session_token', sessionToken);
+                localStorage.setItem('dg_expiration_time', expirationTime);
+                localStorage.setItem('dg_orders_db', JSON.stringify([])); 
+            }
+
+            document.getElementById('tokenDisplay').innerText = `SESSION VERIFIED // TOKEN ACTIVO: ${sessionToken}`;
+            startCountdown(parseInt(expirationTime));
+            renderTable();
+        }
+
+        function startCountdown(endTime) {
+            const timerElement = document.getElementById('timerDisplay');
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    localStorage.clear();
+                    initializeSystem();
+                    return;
+                }
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerElement.innerText = `Autodestrucción DB en: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        // --- PROCESAMIENTO E INYECCIÓN DE PEDIDO (ENCRIPTA AL AGREGAR) ---
+        function processOrder(catId, serviceName) {
+            const orders = JSON.parse(localStorage.getItem('dg_orders_db')) || [];
+            const newId = "PED-" + Math.floor(1000 + Math.random() * 9000);
+            
+            // Log de información delicada que se protegerá de forma real
+            const rawSensitiveData = `IP_TARGET: 10.240.4.${Math.floor(Math.random() * 254)} | Clave_Acceso: Admin_${newId} | Status: Activo`;
+            
+            // Encriptación Real AES
+            const ciphertext = CryptoJS.AES.encrypt(rawSensitiveData, SECRET_KEY).toString();
+
+            const orderObj = {
+                id_pedido: newId,
+                id_cat: catId,
+                servicio: serviceName,
+                datos_cifrados: ciphertext,
+                datos_originales: rawSensitiveData // Guardado auxiliar para la demostración inmediata del botón
+            };
+
+            orders.push(orderObj);
+            localStorage.setItem('dg_orders_db', JSON.stringify(orders));
+            
+            decryptedState = false; // Resetear modo desencriptado al agregar un nuevo item
+            showToast(`⚡ ${newId} Relacionado y Encriptado en Base de Datos.`);
+            renderTable();
+        }
+
+        // --- CONTROL DEL REPRODUCTOR / DESENCRIPCIÓNDEN BASE DE DATOS ---
+        function toggleDecrypt() {
+            const orders = JSON.parse(localStorage.getItem('dg_orders_db')) || [];
+            if (orders.length === 0) {
+                showToast("No hay registros en la base de datos para desencriptar.");
+                return;
+            }
+
+            decryptedState = !decryptedState;
+            const cells = document.querySelectorAll('.cipher-text');
+            
+            orders.forEach((order, index) => {
+                if (cells[index]) {
+                    if (decryptedState) {
+                        // DESENCRIPCIÓN EN VIVO USANDO LA LIBRERÍA
+                        const bytes = CryptoJS.AES.decrypt(order.datos_cifrados, SECRET_KEY);
+                        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+                        
+                        cells[index].innerText = `🔓 [DECIPHERED]: ${originalText}`;
+                        cells[index].style.color = "#FFE066"; // Cambia a oro al revelar
+                    } else {
+                        // Volver a ocultar con el hash
+                        cells[index].innerText = order.datos_cifrados;
+                        cells[index].style.color = "var(--cyber-green)";
+                    }
+                }
+            });
+
+            showToast(decryptedState ? "🔓 Registros descifrados con éxito con la llave local." : "🔒 Base de datos re-encriptada.");
+        }
+
+        // --- RENDER DE LA TABLA RELACIONAL ---
+        function renderTable() {
+            const orders = JSON.parse(localStorage.getItem('dg_orders_db')) || [];
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = "";
+
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 30px;">[Consola Vacía - Compra un módulo arriba para poblar la Base de Datos Relacional]</td></tr>`;
+                return;
+            }
+
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${order.id_pedido}</strong></td>
+                    <td><span style="color: var(--cyber-blue); font-weight:bold;">${order.id_cat}</span></td>
+                    <td>${order.servicio}</td>
+                    <td class="cipher-text">${order.datos_cifrados}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function clearDatabase() {
+            localStorage.setItem('dg_orders_db', JSON.stringify([]));
+            decryptedState = false;
+            renderTable();
+            showToast("🧹 Almacenamiento local purgado.");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        window.onload = initializeSystem;
+    </script>
+</body>
+</html>

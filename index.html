@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DGHolding | Innovación Financiera & Tecnológica</title>
+    <!-- Importación de Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Iconos Auxiliares -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           1. ESTILOS BASE Y VARIABLES DE APPLE (MODO OSCURO AZUL NOCHE + ORO CULICHI)
+           ========================================================================== */
+        :root {
+            --bg-midnight: #03050f;      /* Negro azulado ultra-profundo */
+            --bg-card: rgba(13, 20, 38, 0.45); /* Azul noche translúcido */
+            --bg-card-hover: rgba(18, 28, 52, 0.7);
+            --accent-blue: #0071e3;      /* Azul característico de Apple */
+            --accent-cyan: #29e3c4;      /* Cian para destacar elementos relacionales */
+            --gold-primary: #D4AF37;     /* Oro para toques Premium Placa */
+            --gold-light: #F3E5AB;       /* Oro brillante de alta gama */
+            --gold-glow: rgba(212, 175, 55, 0.15);
+            --text-primary: #f5f5f7;     /* Blanco Apple */
+            --text-secondary: #86868b;   /* Gris Apple */
+            --border-glow: rgba(0, 113, 227, 0.15);
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.15);
+            --font-apple: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Curva de aceleración Apple */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-midnight);
+            color: var(--text-primary);
+            font-family: var(--font-apple);
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            background-image: 
+                radial-gradient(circle at 15% 30%, rgba(0, 113, 227, 0.08), transparent 35%),
+                radial-gradient(circle at 85% 70%, rgba(212, 175, 55, 0.05), transparent 35%);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Ocultamiento dinámico para SPA sin recargar */
+        .view-section {
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .hidden-view {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* ==========================================================================
+           2. HEADER GLASSMORPHIC Y LOGO INTERACTIVO 3D
+           ========================================================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(3, 5, 15, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 65px;
+        }
+
+        /* Contenedor del Logo con perspectiva 3D */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        /* Moneda SVG Animada con el Signo de Pesos */
+        .coin-logo {
+            width: 36px;
+            height: 36px;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-container:hover .coin-logo {
+            transform: rotateY(180deg);
+        }
+
+        .logo-container span {
+            font-weight: 300;
+            color: var(--text-secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--gold-primary);
+            text-shadow: 0 0 8px rgba(212,175,55,0.3);
+        }
+
+        /* ==========================================================================
+           3. HERO SECTION CON EFECTO PARALLAX
+           ========================================================================== */
+        .hero {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 65px;
+        }
+
+        /* Capa de fondo Parallax */
+        .hero-parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background: linear-gradient(180deg, rgba(3, 5, 15, 0.2) 0%, rgba(3, 5, 15, 0.95) 100%), 
+                        url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964') no-repeat center center;
+            background-size: cover;
+            transform: translateY(0);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: -2.5px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: heroFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero p {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            letter-spacing: -0.5px;
+            margin-bottom: 35px;
+            opacity: 0;
+            animation: heroFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #004fb0 100%);
+            color: var(--text-primary);
+            padding: 14px 32px;
+            border-radius: 980px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 24px rgba(0, 113, 227, 0.3);
+            opacity: 0;
+            animation: heroFadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5);
+        }
+
+        /* ==========================================================================
+           4. SECCIÓN IDENTIDAD: BENTO GRID
+           ========================================================================== */
+        .section-identity {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-tag {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        .bento-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: var(--transition);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255,255,255,0.03), transparent 40%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+            background-color: var(--bg-card-hover);
+        }
+
+        .bento-card.col-8 { grid-column: span 8; }
+        .bento-card.col-4 { grid-column: span 4; }
+
+        .bento-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bento-card h3 i {
+            color: var(--gold-primary);
+        }
+
+        .bento-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           5. BASE DE DATOS RELACIONAL E INTERACTIVA
+           ========================================================================== */
+        .section-db {
+            padding: 80px 0;
+            background: linear-gradient(180deg, var(--bg-midnight) 0%, #050814 100%);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .db-interactive-container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            background: rgba(10, 15, 30, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: 32px;
+            padding: 50px;
+            align-items: center;
+        }
+
+        .db-info h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.8px;
+        }
+
+        .db-info p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .db-visualizer {
+            background: #020409;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .db-table {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .db-table.active {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(41, 227, 196, 0.15);
+        }
+
+        .table-header {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 12px 18px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header span.tag {
+            font-size: 10px;
+            background: var(--accent-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .table-header span.tag.fk {
+            background: var(--accent-cyan);
+            color: #02050c;
+        }
+
+        .table-rows {
+            padding: 12px 18px;
+            font-size: 13px;
+        }
+
+        .table-row {
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row .key {
+            color: var(--accent-blue);
+            font-family: monospace;
+        }
+
+        .table-row .key.cyan {
+            color: var(--accent-cyan);
+        }
+
+        /* ==========================================================================
+           6. CONSOLA DE BASE DE DATOS EN TIEMPO REAL (Simulada con Expiración)
+           ========================================================================== */
+        .section-monitor {
+            padding: 80px 0;
+            background-color: #020205;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .monitor-card {
+            background: linear-gradient(135deg, rgba(15,15,22,0.9) 0%, rgba(5,5,10,0.95) 100%);
+            border: 1px solid var(--border-gold); /* Borde dorado sutil */
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+        }
+
+        .monitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .monitor-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .token-badge {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .timer-container {
+            text-align: right;
+        }
+
+        .timer-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        .countdown-clock {
+            font-size: 22px;
+            font-weight: 800;
+            font-family: monospace;
+            color: #ef4444; /* Rojo autodestrucción */
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tabla de Mensajes Recibidos */
+        .db-output-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .db-output-table th, .db-output-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .db-output-table th {
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .db-output-table td {
+            font-size: 14px;
+        }
+
+        .db-output-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .db-empty {
+            text-align: center;
+            padding: 45px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* ==========================================================================
+           7. PERFIL DEL AUTOR - ESTILO TARJETA BLACK EXCLUSIVA (PLACA x APPLE)
+           ========================================================================== */
+        .author-section {
+            padding: 120px 0 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-container {
+            background: linear-gradient(145deg, rgba(20,20,26,0.9) 0%, rgba(5,5,10,0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 24px;
+            padding: 50px;
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: var(--transition);
+        }
+
+        .profile-container:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 35px 80px rgba(0,0,0,0.9), 
+                        0 0 30px var(--gold-glow);
+        }
+
+        /* Efecto destello dorado rotativo en el fondo de la placa */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, var(--gold-glow));
+            animation: cardSpin 15s linear infinite;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .profile-container:hover::before {
+            opacity: 1;
+        }
+
+        .profile-info {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .profile-info h3 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, var(--gold-light), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--gold-primary);
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .profile-info p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.3), transparent);
+            margin: 30px 0;
+        }
+
+        .contact-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .contact-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 50px;
+            transition: var(--transition);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .contact-item:hover {
+            background: rgba(212, 175, 55, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateX(5px);
+        }
+
+        .contact-icon {
+            color: var(--gold-primary);
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .contact-text {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ==========================================================================
+           8. FORMULARIO ESTILO PLACA VIP (Súper Elegante)
+           ========================================================================== */
+        .form-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-primary);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .placa-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .placa-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            color: #fff;
+            font-family: var(--font-apple);
+            font-size: 15px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .placa-input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(212,175,55,0.15);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .placa-input:focus + .input-icon {
+            color: var(--gold-primary);
+        }
+
+        .placa-textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        .placa-textarea + .input-icon {
+            top: 25px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #111 0%, var(--gold-primary) 220%);
+            border: 1px solid var(--gold-primary);
+            padding: 16px;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--gold-primary);
+            color: #000;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Notificación de Éxito */
+        .notification {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(46, 213, 115, 0.1);
+            border: 1px solid #2ed573;
+            color: #2ed573;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           9. ANIMACIONES Y MEDIA QUERIES
+           ========================================================================== */
+        @keyframes heroFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardSpin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            border-top: 1px solid var(--border-light);
+            background-color: #010206;
+            padding: 40px 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: auto;
+        }
+
+        @media(max-width: 992px) {
+            .bento-card.col-8, .bento-card.col-4 { grid-column: span 12; }
+            .db-interactive-container { grid-template-columns: 1fr; }
+        }
+
+        @media(max-width: 768px) {
+            .hero h1 { font-size: 44px; letter-spacing: -1.5px; }
+            .hero p { font-size: 18px; }
+            .navbar { padding: 0 15px; }
+            .profile-container { padding: 30px 20px; border-radius: 20px; }
+            .profile-info h3 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Glassmorphic -->
+    <header>
+        <div class="container navbar">
+            <div onclick="switchView('home')" class="logo-container">
+                <svg class="coin-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="url(#coinGrad)" stroke="#D4AF37" stroke-width="4"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(212, 175, 55, 0.5)" stroke-width="2" stroke-dasharray="6 4"/>
+                    <text x="50" y="68" font-family="'Inter', sans-serif" font-weight="800" font-size="52" fill="#D4AF37" text-anchor="middle">$</text>
+                    <defs>
+                        <radialGradient id="coinGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" transform="translate(50 50) rotate(45) scale(45)">
+                            <stop offset="0%" stop-color="#2a2210"/>
+                            <stop offset="70%" stop-color="#110d05"/>
+                            <stop offset="100%" stop-color="#000000"/>
+                        </radialGradient>
+                    </defs>
+                </svg>
+                DGHolding<span>.com</span>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a id="nav-link-home" onclick="switchView('home')" class="nav-link-btn active">Inicio</a></li>
+                    <li><a onclick="navigateToSection('identidad')">Identidad</a></li>
+                    <li><a onclick="navigateToSection('base-datos')">Relacional</a></li>
+                    <li><a onclick="navigateToSection('monitor-seccion')">Consola DB</a></li>
+                    <li><a id="nav-link-author" onclick="switchView('author')" class="nav-link-btn">El Autor</a></li>
+                    <li><a href="shop.html" class="nav-link-btn active">Shop</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+       VISTA 1: INICIO (CORPORATIVO)
+       ========================================================================== -->
+    <div id="view-home" class="view-section">
+        
+        <!-- Hero Section con Parallax -->
+        <section class="hero">
+            <div class="hero-parallax-bg" id="parallaxBg"></div>
+            <div class="hero-content">
+                <h1>Evolución Digital para tu Empresa</h1>
+                <p>Sistemas robustos de bases de datos relacionales integrados con diseños minimalistas premium.</p>
+                <a onclick="navigateToSection('identidad')" class="cta-button">Explorar Identidad</a>
+            </div>
+        </section>
+
+        <!-- Bento Grid (Identidad Corporativa) -->
+        <section class="section-identity container" id="identidad">
+            <div class="section-header reveal">
+                <span class="section-tag">Fundamentos</span>
+                <h2 class="section-title">Nuestra Identidad Corporativa</h2>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-card col-8 reveal">
+                    <div>
+                        <h3><i class="fa-solid fa-bullseye"></i> Nuestro Objetivo</h3>
+                        <p>Construir plataformas web imponentes, que fusionen la robustez del desarrollo técnico con interfaces fluidas de primer nivel. Nos especializamos en la optimización de procesos de negocio complejos mediante arquitecturas de software eficientes y un diseño refinado.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card col-4 reveal">
+                    <div>
+                        <h3><i class="fa-solid fa-compass"></i> Propósito del Sitio</h3>
+                        <p>Funcionar como un escaparate tecnológico interactivo donde las empresas puedan simular, auditar y experimentar con sistemas de bases de datos relacionales encriptados en tiempo real.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card col-4 reveal">
+                    <div>
+                        <h3><i class="fa-solid fa-rocket"></i> Misión</h3>
+                        <p>Dotar a empresas en crecimiento de herramientas digitales sumamente seguras, programadas de manera limpia y bajo los más altos estándares visuales, permitiéndoles escalar en el mercado global.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card col-8 reveal">
+                    <div>
+                        <h3><i class="fa-solid fa-eye"></i> Visión</h3>
+                        <p>Consolidarnos como el holding técnico más exclusivo y respetado en desarrollo de software para el año 2030, marcando un hito definitivo en elegancia visual, minimalismo interactivo y seguridad de bases de datos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Relational DB visualizer -->
+        <section class="section-db" id="base-datos">
+            <div class="container">
+                <div class="db-interactive-container reveal">
+                    <div class="db-info">
+                        <span class="section-tag">Arquitectura Lógica</span>
+                        <h3>Estructura Relacional 1 a N</h3>
+                        <p>Implementamos un modelo estructurado donde un <strong>Servicio</strong> pertenece únicamente a una <strong>Categoría</strong>.</p>
+                        <p>Haz clic en las tablas del simulador para comprobar la integración y el resalte de llaves foráneas en tiempo real.</p>
+                    </div>
+
+                    <div class="db-visualizer">
+                        <div class="db-table active" id="tableCategorias" onclick="highlightRelation('categorias')">
+                            <div class="table-header">
+                                <span>Categorias (Tabla Fuerte)</span>
+                                <span class="tag">1</span>
+                            </div>
+                            <div class="table-rows">
+                                <div class="table-row">
+                                    <span class="key">🔑 id_categoria</span>
+                                    <span>INT (PK)</span>
+                                </div>
+                                <div class="table-row">
+                                    <span>nombre_categoria</span>
+                                    <span>VARCHAR</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="db-table" id="tableServicios" onclick="highlightRelation('servicios')">
+                            <div class="table-header">
+                                <span>Servicios (Tabla Débil)</span>
+                                <span class="tag fk">N</span>
+                            </div>
+                            <div class="table-rows">
+                                <div class="table-row">
+                                    <span class="key">🔑 id_servicio</span>
+                                    <span>INT (PK)</span>
+                                </div>
+                                <div class="table-row">
+                                    <span>nombre_servicio</span>
+                                    <span>VARCHAR</span>
+                                </div>
+                                <div class="table-row">
+                                    <span class="key cyan">🔑 id_categoria</span>
+                                    <span style="color: var(--accent-cyan);">INT (FK)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consola de Base de Datos Encriptada (Expiración en 12h) -->
+        <section class="section-monitor" id="monitor-seccion">
+            <div class="container">
+                <div class="monitor-card reveal">
+                    <div class="monitor-header">
+                        <div class="monitor-title">
+                            <i class="fa-solid fa-terminal"></i> Terminal Base de Datos Encriptada
+                        </div>
+                        <div id="tokenDisplay" class="token-badge">Generando Token...</div>
+                        <div class="timer-container">
+                            <div class="timer-label">Autodestrucción de datos en:</div>
+                            <div id="countdown" class="countdown-clock">12:00:00</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 15px; color: var(--text-primary);">[Tabla: Mensajes_Entrantes]</h4>
+                    <div style="overflow-x: auto;">
+                        <table class="db-output-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Remitente</th>
+                                    <th>Email</th>
+                                    <th>Mensaje / Propuesta</th>
+                                    <th>Registro Horario</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dbTableBody">
+                                <!-- Inyección dinámica con JS -->
+                            </tbody>
+                        </table>
+                        <div id="noDataMessage" class="db-empty" style="display: none;">
+                            No se han registrado propuestas en esta sesión. Ve a la sección de "El Autor" para enviar una.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ==========================================================================
+       VISTA 2: EL AUTOR (EXCLUSIVO)
+       ========================================================================== -->
+    <div id="view-author" class="view-section hidden-view">
+        
+        <main class="container author-section">
+            <h2 class="section-title">Confidencial & Exclusivo</h2>
+            
+            <div class="profile-container" id="vipCard">
+                <div class="profile-info">
+                    
+                    <h3>Ángel Adonai Durán Rodríguez</h3>
+                    <p class="subtitle">Arquitecto Web & Analista de Seguridad</p>
+                    
+                    <p>Estudiante técnico enfocado en la élite digital: creación de herramientas OSINT, automatización avanzada mediante programación y auditorías tácticas de infraestructura de red.</p>
+                    
+                    <hr>
+                    
+                    <h4 class="contact-title">Línea Directa de Información</h4>
+                    
+                    <ul class="contact-list">
+                        <li class="contact-item">
+                            <i class="fa-solid fa-location-dot contact-icon"></i>
+                            <span class="contact-text">Tepic, Nayarit, México</span>
+                        </li>
+                        <li class="contact-item">
+                            <i class="fa-solid fa-envelope contact-icon"></i>
+                            <span class="contact-text">contacto@dgholding.com</span>
+                        </li>
+                        <li class="contact-item">
+                            <i class="fa-brands fa-github contact-icon"></i>
+                            <span class="contact-text">github.com/angel-adonai</span>
+                        </li>
+                    </ul>
+
+                    <hr>
+
+                    <!-- Formulario que escribe en la Base de Datos Encriptada Compartida -->
+                    <h4 class="form-title">Proponer Alianza (Escribir en LocalDB)</h4>
+
+                    <form class="placa-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+                        <div class="input-group">
+                            <input type="text" id="senderName" class="placa-input" placeholder="Tu Nombre o Alias" required>
+                            <i class="fa-solid fa-user input-icon"></i>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="email" id="senderEmail" class="placa-input" placeholder="Correo de Enlace" required>
+                            <i class="fa-solid fa-envelope input-icon"></i>
+                        </div>
+
+                        <div class="input-group">
+                            <textarea id="senderMessage" class="placa-input placa-textarea" placeholder="Describe tu propuesta empresarial..." required></textarea>
+                            <i class="fa-solid fa-message input-icon"></i>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar a Base de Datos
+                        </button>
+
+                        <div id="successNotice" class="notification">
+                            <i class="fa-solid fa-circle-check"></i> Alianza registrada. Transmisión enviada al monitor central. Redirigiendo...
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Footer minimalista común -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DGHolding. Desarrollado bajo la filosofía de "Menos es más".</p>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       10. LÓGICA DE CONTROLADORES JS Y SIMULACIÓN DE BASE DE DATOS
+       ========================================================================== -->
+    <script>
+        // --- 1. CONFIGURACIÓN E INTERRUPTOR DE VISTAS (SPA) ---
+        function switchView(viewName) {
+            const homeView = document.getElementById('view-home');
+            const authorView = document.getElementById('view-author');
+            const navLinks = document.querySelectorAll('.nav-link-btn');
+
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            if (viewName === 'home') {
+                homeView.classList.remove('hidden-view');
+                authorView.classList.add('hidden-view');
+                document.getElementById('nav-link-home').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Volver a activar los triggers de IntersectionObserver
+                setTimeout(revealOnScroll, 100);
+            } else if (viewName === 'author') {
+                authorView.classList.remove('hidden-view');
+                homeView.classList.add('hidden-view');
+                document.getElementById('nav-link-author').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function navigateToSection(sectionId) {
+            // Asegurarse de que estamos en la pestaña Inicio
+            switchView('home');
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+
+        // --- 2. LÓGICA BASE DE DATOS SIMULADA (LocalDB con Expiración de 12 horas) ---
+        const EXPIRE_TIME = 12 * 60 * 60 * 1000; // 12 horas
+
+        function checkAndInitDB() {
+            let session = localStorage.getItem('DG_SESSION');
+            const now = Date.now();
+
+            if (session) {
+                const parsedSession = JSON.parse(session);
+                const timeElapsed = now - parsedSession.createdAt;
+
+                if (timeElapsed > EXPIRE_TIME) {
+                    // Si pasaron 12 horas, expira e inicializa nueva base de datos
+                    return createNewSession(now);
+                }
+                return parsedSession;
+            } else {
+                return createNewSession(now);
+            }
+        }
+
+        function createNewSession(timestamp) {
+            const newToken = 'DG-SEC-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            const defaultSession = {
+                token: newToken,
+                createdAt: timestamp,
+                messages: [
+                    {
+                        id: 1,
+                        name: "Socio Fundador",
+                        email: "boss@dgholding.com",
+                        message: "Bienvenido al sistema relacional encriptado de DGHolding. Esta base de datos se autodestruirá en 12 horas.",
+                        time: new Date(timestamp).toLocaleTimeString()
+                    }
+                ]
+            };
+            localStorage.setItem('DG_SESSION', JSON.stringify(defaultSession));
+            return defaultSession;
+        }
+
+        function renderDB() {
+            const db = checkAndInitDB();
+            document.getElementById('tokenDisplay').innerText = db.token;
+
+            const tbody = document.getElementById('dbTableBody');
+            const noData = document.getElementById('noDataMessage');
+            tbody.innerHTML = '';
+
+            if (!db.messages || db.messages.length === 0) {
+                noData.style.display = 'block';
+            } else {
+                noData.style.display = 'none';
+                db.messages.forEach(msg => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="color: var(--gold-primary); font-weight: bold;">#${msg.id}</td>
+                        <td style="font-weight: 600;">${msg.name}</td>
+                        <td style="color: var(--text-secondary);">${msg.email}</td>
+                        <td style="color: #6ee7b7; font-family: monospace;">${msg.message}</td>
+                        <td style="font-size: 12px; color: var(--text-secondary);">${msg.time}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Iniciar Reloj de Cuenta regresiva
+            updateTimer(db.createdAt);
+        }
+
+        // --- STREAMING_CHUNK:Implementing timer logic and submissions... ---
+        let timerIntervalId = null;
+
+        function updateTimer(createdAt) {
+            const countdownEl = document.getElementById('countdown');
+            if (timerIntervalId) clearInterval(timerIntervalId);
+
+            function calculate() {
+                const now = Date.now();
+                const difference = (createdAt + EXPIRE_TIME) - now;
+
+                if (difference <= 0) {
+                    clearInterval(timerIntervalId);
+                    createNewSession(now);
+                    renderDB();
+                    return;
+                }
+
+                const hours = Math.floor(difference / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                countdownEl.innerText = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            calculate();
+            timerIntervalId = setInterval(calculate, 1000);
+        }
+
+        // Registro de datos desde el Formulario
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('senderName').value;
+            const email = document.getElementById('senderEmail').value;
+            const message = document.getElementById('senderMessage').value;
+
+            const db = checkAndInitDB();
+
+            // Insertar nuevo mensaje (Simulando INSERT en SQL)
+            const newMsg = {
+                id: (db.messages ? db.messages.length : 0) + 1,
+                name: name,
+                email: email,
+                message: message,
+                time: new Date().toLocaleTimeString()
+            };
+
+            if(!db.messages) db.messages = [];
+            db.messages.push(newMsg);
+            
+            // Guardar cambios persistentes
+            localStorage.setItem('DG_SESSION', JSON.stringify(db));
+
+            // Actualizar consola de inmediato
+            renderDB();
+
+            // Notificación de éxito
+            document.getElementById('contactForm').reset();
+            const notice = document.getElementById('successNotice');
+            notice.style.display = 'block';
+
+            // Redirección suave tras 2 segundos hacia la consola
+            setTimeout(() => {
+                notice.style.display = 'none';
+                navigateToSection('monitor-seccion');
+            }, 2000);
+        }
+
+        // --- STREAMING_CHUNK:Configuring visual mouse tracking and scroll reveals... ---
+        // --- 3. EFECTOS VISUALES AVANZADOS (3D Tilt y Parallax) ---
+        window.addEventListener('scroll', () => {
+            const scrollValue = window.scrollY;
+            const parallaxBg = document.getElementById('parallaxBg');
+            if (parallaxBg && !document.getElementById('view-home').classList.contains('hidden-view')) {
+                parallaxBg.style.transform = `translateY(${scrollValue * 0.4}px)`;
+            }
+        });
+
+        // Revelado al hacer scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const triggerBottom = window.innerHeight * 0.85;
+            revealElements.forEach(el => {
+                const boxTop = el.getBoundingClientRect().top;
+                if (boxTop < triggerBottom) {
+                    el.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Efecto hover magnético Bento Grid
+        const cards = document.querySelectorAll('.bento-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Inclinación 3D en la Placa del Autor
+        const vipCard = document.getElementById('vipCard');
+        if (vipCard) {
+            vipCard.addEventListener('mousemove', (e) => {
+                const rect = vipCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -3;
+                const rotateY = ((x - centerX) / centerX) * 3;
+                
+                vipCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px) scale(1.01)`;
+            });
+
+            vipCard.addEventListener('mouseleave', () => {
+                vipCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)`;
+            });
+        }
+
+        // Resaltado de relaciones 1:N
+        function highlightRelation(table) {
+            const tCat = document.getElementById('tableCategorias');
+            const tSer = document.getElementById('tableServicios');
+            if (table === 'categorias') {
+                tCat.classList.add('active');
+                tSer.classList.remove('active');
+            } else {
+                tSer.classList.add('active');
+                tCat.classList.remove('active');
+            }
+        }
+
+        // Carga inicial de datos
+        window.onload = function() {
+            renderDB();
+            revealOnScroll();
+        }
+    </script>
+</body>
+</html>
